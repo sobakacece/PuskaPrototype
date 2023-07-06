@@ -149,7 +149,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 634610588}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6282f421939b503448a3ed53a88aaa75, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -221,8 +221,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 634610588}
   m_LocalRotation: {x: -0, y: -0.3675444, z: -0, w: 0.930006}
-  m_LocalPosition: {x: 12.12, y: 10.1, z: -7.16}
-  m_LocalScale: {x: 20, y: 20, z: 5}
+  m_LocalPosition: {x: 12.12, y: 4.01, z: -7.16}
+  m_LocalScale: {x: 20, y: 7.34, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -577,10 +577,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d60acfdfa2eba468a0b133c5fa94a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
-  jumpVelocity: 10
+  speed: 0.5
+  jumpVelocity: 20
   transitionSharpness: 3
-  velocityDeadThreshold: 0
+  velocityDeadThreshold: 0.1
 --- !u!54 &1316581767
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -591,7 +591,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 10
   m_Drag: 1
-  m_AngularDrag: 1
+  m_AngularDrag: 3
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}

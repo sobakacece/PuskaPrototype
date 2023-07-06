@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpVelocity = 30f;
     [SerializeField] private float transitionSharpness;
     [SerializeField][Range(0, 1f)] private float velocityDeadThreshold;
+
     Vector3 moveVector;
     private float targetSpeed;
     private Quaternion targetRotation;
@@ -19,6 +20,8 @@ public class Player : MonoBehaviour
     private Vector3 currVelocity;
     private float currSpeed;
     private Quaternion currRotation;
+
+    private bool IsHanging;
 
     void OnEnable()
     {
@@ -34,7 +37,22 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (IsHanging)
+            return;
 
+        if (MyRigidbody.velocity.y < 0)
+            LedgeGrab();
+
+        Movement();
+        ApplyThreshold();
+        MyRigidbody.velocity += currVelocity;
+
+
+        // MyRigidbody.AddRelativeForce(currVelocity, ForceMode.Impulse);
+        // transform.Translate(currVelocity * Time.deltaTime, Space.World);
+    }
+    private void Movement()
+    {
         CalculateMoveDirection();
 
         targetSpeed = moveVector != Vector3.zero ? speed : 0;
@@ -48,16 +66,7 @@ public class Player : MonoBehaviour
             currRotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * transitionSharpness);
             transform.rotation = currRotation;
         }
-        MyRigidbody.velocity += currVelocity;
-        // MyRigidbody.AddRelativeForce(currVelocity, ForceMode.Impulse);
-        // transform.Translate(currVelocity * Time.deltaTime, Space.World);
-    }
-    private void ApplyThreshold()
-    {
-        if (MyRigidbody.velocity.magnitude < velocityDeadThreshold)
-        {
-            MyRigidbody.velocity = Vector3.zero;
-        }
+
     }
     private void CalculateMoveDirection()
     {
@@ -67,17 +76,62 @@ public class Player : MonoBehaviour
 
         moveVector = cameraPlanarRotation * moveVector;
     }
-    private void OnDisable()
+    private void ApplyThreshold()
     {
-        PlayerInputHandler.OnJump -= Jump;
-
+        if (MyRigidbody.velocity.magnitude < velocityDeadThreshold)
+        {
+            MyRigidbody.velocity = Vector3.zero;
+        }
     }
     private void Jump()
     {
         // Debug.Log("Jump happened");
         // MyRigidbody.AddForce(jumpVelocity * Vector3.up);
         MyRigidbody.velocity += jumpVelocity * Vector3.up;
+        IsHanging = false;
+        MyRigidbody.useGravity = true;
 
+    }
+    private void LedgeGrab()
+    {
+        RaycastHit downHit;
+        Vector3 lineDownStart = (transform.position + Vector3.up * 1.8f) + transform.forward;
+        Vector3 lineDownEnd = (transform.position + Vector3.up * 0.7f) + transform.forward;
+        Physics.Linecast(lineDownStart, lineDownEnd, out downHit);
+
+        if (downHit.collider == null)
+            return;
+
+        RaycastHit forwardHit;
+        Vector3 lineForwardStart = new Vector3(transform.position.x, downHit.point.y - 0.1f, transform.position.z);
+        Vector3 lineForwardEnd = new Vector3(transform.position.x, downHit.point.y - 0.1f, transform.position.z) + transform.forward;
+        Physics.Linecast(lineForwardStart, lineForwardEnd, out forwardHit);
+
+        if (forwardHit.collider == null)
+            return;
+
+        MyRigidbody.useGravity = false;
+        MyRigidbody.velocity = Vector3.zero;
+
+        IsHanging = true;
+
+        // Vector3 hangPosition = new Vector3(forwardHit.point.x, downHit.point.y, forwardHit.point.z);
+        // Vector3 offset = transform.forward * -0.1f + transform.up * -1f;
+        // hangPosition += offset;
+
+        // transform.position = hangPosition;
+
+        transform.forward = -forwardHit.normal;
+
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Collided with " + collision.gameObject.name);
+
+    }
+    private void OnDisable()
+    {
+        PlayerInputHandler.OnJump -= Jump;
     }
 
 }
