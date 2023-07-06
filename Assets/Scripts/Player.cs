@@ -7,9 +7,10 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     Rigidbody MyRigidbody;
     [Header("Movement")]
-    [SerializeField] float speed = 30f;
-    [SerializeField] float jumpVelocity = 100f;
+    [SerializeField] float speed = 1f;
+    [SerializeField] float jumpVelocity = 30f;
     [SerializeField] private float transitionSharpness;
+    [SerializeField][Range(0, 1f)] private float velocityDeadThreshold;
     Vector3 moveVector;
     private float targetSpeed;
     private Quaternion targetRotation;
@@ -19,6 +20,10 @@ public class Player : MonoBehaviour
     private float currSpeed;
     private Quaternion currRotation;
 
+    void OnEnable()
+    {
+        PlayerInputHandler.OnJump += Jump;
+    }
     void Start()
     {
         if (MyRigidbody == null)
@@ -29,10 +34,11 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
+
         CalculateMoveDirection();
 
         targetSpeed = moveVector != Vector3.zero ? speed : 0;
-        currSpeed = Mathf.Lerp(currSpeed, targetSpeed, Time.deltaTime * transitionSharpness);
+        currSpeed = Mathf.Lerp(currSpeed, targetSpeed, transitionSharpness);
 
         currVelocity = moveVector * currSpeed;
 
@@ -42,8 +48,16 @@ public class Player : MonoBehaviour
             currRotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * transitionSharpness);
             transform.rotation = currRotation;
         }
-
-        transform.Translate(currVelocity * Time.deltaTime, Space.World);
+        MyRigidbody.velocity += currVelocity;
+        // MyRigidbody.AddRelativeForce(currVelocity, ForceMode.Impulse);
+        // transform.Translate(currVelocity * Time.deltaTime, Space.World);
+    }
+    private void ApplyThreshold()
+    {
+        if (MyRigidbody.velocity.magnitude < velocityDeadThreshold)
+        {
+            MyRigidbody.velocity = Vector3.zero;
+        }
     }
     private void CalculateMoveDirection()
     {
@@ -52,6 +66,18 @@ public class Player : MonoBehaviour
         Quaternion cameraPlanarRotation = Quaternion.LookRotation(cameraDirection);
 
         moveVector = cameraPlanarRotation * moveVector;
+    }
+    private void OnDisable()
+    {
+        PlayerInputHandler.OnJump -= Jump;
+
+    }
+    private void Jump()
+    {
+        // Debug.Log("Jump happened");
+        // MyRigidbody.AddForce(jumpVelocity * Vector3.up);
+        MyRigidbody.velocity += jumpVelocity * Vector3.up;
+
     }
 
 }
