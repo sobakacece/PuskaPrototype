@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private LayerMask obstacleLayer = -1;
     private List<Collider> ignoreColliders = new List<Collider>();
 
-    private Vector3 planarDir;
+    public Vector3 planarDir;
     private Vector3 targetPosition;
     private Quaternion targetRotation;
     private float targetVerticalAngle;
@@ -55,7 +55,7 @@ public class CameraController : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
     }
-    private void Update()
+    private void FixedUpdate()
     {
         if (Cursor.lockState != CursorLockMode.Locked)
         {
@@ -74,6 +74,7 @@ public class CameraController : MonoBehaviour
         //Handling obstacles
         float smallestDistance = targetDistance;
         RaycastHit[] hits = Physics.SphereCastAll(focusPosition, obstacleCheckRadius, targetRotation * Vector3.back, targetDistance, obstacleLayer);
+       
         hits = hits.Where(x => !ignoreColliders.Contains(x.collider) && x.distance < smallestDistance).ToArray();
         if (hits.Length != 0)
         {
