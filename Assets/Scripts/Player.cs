@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     private Quaternion currRotation;
 
     private bool IsHanging;
+    float distanceToGround;
 
     void OnEnable()
     {
@@ -34,6 +35,7 @@ public class Player : MonoBehaviour
             MyRigidbody = GetComponent<Rigidbody>();
         }
         cameraController = GetComponent<CameraController>();
+        distanceToGround = GetComponent<Collider>().bounds.extents.y;
     }
     void FixedUpdate()
     {
@@ -42,7 +44,7 @@ public class Player : MonoBehaviour
 
         if (MyRigidbody.velocity.y < 0)
             LedgeGrab();
-
+        
         Movement();
         ApplyThreshold();
         MyRigidbody.velocity += currVelocity;
@@ -85,12 +87,18 @@ public class Player : MonoBehaviour
     }
     private void Jump()
     {
-        // Debug.Log("Jump happened");
-        // MyRigidbody.AddForce(jumpVelocity * Vector3.up);
+        if (IsGrounded() || IsHanging)
+        {
+
         MyRigidbody.velocity += jumpVelocity * Vector3.up;
         IsHanging = false;
         MyRigidbody.useGravity = true;
+        }
 
+    }
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, distanceToGround + 0.1f, -1);
     }
     private void LedgeGrab()
     {
@@ -124,14 +132,8 @@ public class Player : MonoBehaviour
         transform.forward = -forwardHit.normal;
 
     }
-    void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Collided with " + collision.gameObject.name);
-
-    }
     private void OnDisable()
     {
         PlayerInputHandler.OnJump -= Jump;
     }
-
 }
