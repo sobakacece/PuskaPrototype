@@ -7,7 +7,9 @@ public abstract class InteractiveObject : MonoBehaviour
     protected GameObject player;
     protected void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Player")
+        Vector3 hit = collision.contacts[0].normal;
+        float angle = Vector3.Angle(hit, Vector3.up);
+        if (collision.gameObject.tag == "Player" && Mathf.Approximately(angle, 180))
         {
             player = collision.gameObject;
             ApplyEffect();

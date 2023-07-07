@@ -59,7 +59,6 @@ public class Player : MonoBehaviour
 
         targetSpeed = moveVector != Vector3.zero ? speed : 0;
         currSpeed = Mathf.Lerp(currSpeed, targetSpeed, transitionSharpness);
-
         currVelocity = moveVector * currSpeed;
 
         if (targetSpeed != 0)
@@ -89,12 +88,10 @@ public class Player : MonoBehaviour
     {
         if (IsGrounded() || IsHanging)
         {
-
         MyRigidbody.velocity += jumpVelocity * Vector3.up;
         IsHanging = false;
         MyRigidbody.useGravity = true;
         }
-
     }
     private bool IsGrounded()
     {
