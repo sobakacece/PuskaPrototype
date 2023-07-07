@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Bed : InteractiveObject
 {
-    [SerializeField] private float shoveVelocity =  50f;
+    [SerializeField] private float shoveVelocity = 50f;
     public override void ApplyEffect()
     {
-        player.GetComponent<Rigidbody>().AddForce(Vector3.up * shoveVelocity, ForceMode.Impulse);
+        // player.GetComponent<Rigidbody>().AddForce(Vector3.up * shoveVelocity, ForceMode.Impulse);
+        player.GetComponent<Rigidbody>().velocity += shoveVelocity * Vector3.up;
+
     }
 }

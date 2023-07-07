@@ -7,8 +7,10 @@ public class Platform : InteractiveObject
 {
     float distance;
     [SerializeField] public PathCreator pathCreator;
-    private GameObject  platform;
+    Rigidbody MyRigidbody;
+    // Vector3 moveVector;
     public float speed = 5f;
+    private float currSpeed;
     bool isActivated = false;
     public override void ApplyEffect()
     {
@@ -16,14 +18,28 @@ public class Platform : InteractiveObject
     }
     void Start()
     {
+        MyRigidbody = GetComponent<Rigidbody>();
+        // pathCreator.path.OnEndOfPath += () => isActivated = false;
     }
     void Update()
     {
+        // MyRigidbody.velocity =  Vector3.zero;
         if (isActivated)
         {
             distance += speed * Time.deltaTime;
-            transform.position = pathCreator.path.GetPointAtDistance(distance, EndOfPathInstruction.Reverse);
-            Debug.Log($"Activated and at a distance {distance}");
+            MyRigidbody.MovePosition(pathCreator.path.GetPointAtDistance(distance, EndOfPathInstruction.Reverse));
+            // moveVector = pathCreator.path.GetPointAtDistance(distance, EndOfPathInstruction.Reverse).normalized;
+            if (distance >= pathCreator.path.length * 2)
+            {
+                Refresh();
+            }
         }
+
+    }
+    void Refresh()
+    {
+        distance = 0;
+        MyRigidbody.MovePosition(pathCreator.path.GetPointAtDistance(distance));
+        isActivated = false;
     }
 }
