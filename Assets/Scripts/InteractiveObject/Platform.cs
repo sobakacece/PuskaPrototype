@@ -21,12 +21,12 @@ public class Platform : InteractiveObject
         MyRigidbody = GetComponent<Rigidbody>();
         // pathCreator.path.OnEndOfPath += () => isActivated = false;
     }
-    void Update()
+    void FixedUpdate()
     {
         // MyRigidbody.velocity =  Vector3.zero;
         if (isActivated)
         {
-            distance += speed * Time.deltaTime;
+            distance += speed;
             MyRigidbody.MovePosition(pathCreator.path.GetPointAtDistance(distance, EndOfPathInstruction.Reverse));
             // moveVector = pathCreator.path.GetPointAtDistance(distance, EndOfPathInstruction.Reverse).normalized;
             if (distance >= pathCreator.path.length * 2)
