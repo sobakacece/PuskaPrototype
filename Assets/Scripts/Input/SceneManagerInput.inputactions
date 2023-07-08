@@ -1,0 +1,54 @@
+{
+    "name": "SceneManagerInput",
+    "maps": [
+        {
+            "name": "Main",
+            "id": "1dfbce24-456a-45e5-bd7f-795edb5eac75",
+            "actions": [
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "b6541d3f-eb20-4c4a-971c-b158b1d4dea0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "ba759a58-9183-4541-b7df-2f8cc5ed797b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c94faae8-ab67-40a9-baa1-573d78cf73b1",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4e391212-b706-4844-b3f8-a81720558cfd",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

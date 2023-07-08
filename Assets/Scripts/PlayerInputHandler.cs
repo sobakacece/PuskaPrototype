@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using UnityEngine.SceneManagement;
 
 
 public class PlayerInputHandler : MonoBehaviour
@@ -17,6 +18,10 @@ public class PlayerInputHandler : MonoBehaviour
     public static Vector2 MoveInput { get; private set; } = Vector2.zero;
     PlayerInputMap input;
 
+    void Awake()
+    {
+        // DontDestroyOnLoad(this.gameObject);
+    }
     private void OnEnable()
     {
         if (input == null)
@@ -46,5 +51,6 @@ public class PlayerInputHandler : MonoBehaviour
     {
         OnJump?.Invoke();
     }
+
 
 }
